@@ -1,5 +1,4 @@
 import OpenAI from 'openai';
-import { envs } from 'src/config/envs';
 
 interface Options {
   prompt: string;
@@ -15,18 +14,34 @@ export const ortographyCheckUseCase = async (
     messages: [
       {
         role: 'system',
-        content: `Please check the following text for spelling and grammar errors, and provide a corrected version:\n\n${prompt}`,
+        content: `
+          Te serán proveidos textos en español con posibles errores ortograficos y gramaticales.
+          Las palabras usadas deben de existir en el diccionario de la Real Academia Española.
+          Debes de responder en formato JSON,
+          tu tarea es corregirlos y retornar informacion soluciones,
+          tambien debes dar un pocentaje de acierto por el usuario
+
+          Si no hay errores, deber de retornar un mensaje de felicitaciones
+
+          Ejemplo de salida:
+          {
+            userScore: number,
+            errors: string[], //['error -> solucion']
+            message: string, // Usa emojis y texto para felicitar al usuario
+          }
+        `,
       },
       {
         role: 'user',
-        content: `Please check the following text for spelling and grammar errors, and provide a corrected version:\n\n${prompt}`,
+        content: prompt,
       },
     ],
     model: 'gpt-3.5-turbo',
-    // temperature: 0,
+    temperature: 0.3,
+    max_tokens: 150,
   });
 
   return {
-    response: completion.choices[0],
+    response: completion.choices[0].message.content,
   };
 };
