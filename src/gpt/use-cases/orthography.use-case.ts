@@ -4,6 +4,12 @@ interface Options {
   prompt: string;
 }
 
+type OrthographyResponse = {
+  userScore: number;
+  errors: string[];
+  message: string;
+};
+
 export const ortographyCheckUseCase = async (
   openai: OpenAI,
   options: Options,
@@ -39,9 +45,21 @@ export const ortographyCheckUseCase = async (
     model: 'gpt-3.5-turbo',
     temperature: 0.3,
     max_tokens: 150,
+    response_format: {
+      type: 'json_object',
+    },
   });
 
-  return {
-    response: completion.choices[0].message.content,
-  };
+  if (
+    completion.choices.length === 0 ||
+    !completion.choices[0]?.message?.content
+  ) {
+    throw new Error('No response from OpenAI');
+  }
+
+  const jsonResp = JSON.parse(
+    completion.choices[0].message.content,
+  ) as OrthographyResponse;
+
+  return jsonResp;
 };
