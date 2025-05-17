@@ -1,5 +1,13 @@
-export const ortographyCheckUseCase = async () => {
+import { envs } from 'src/config/envs';
+
+interface Options {
+  prompt: string;
+}
+
+export const ortographyCheckUseCase = async (options: Options) => {
+  const { prompt } = options;
   return {
-    message: 'Ortography check is not implemented yet.',
+    prompt,
+    apiKey: envs.openAiApiKey,
   };
 };
