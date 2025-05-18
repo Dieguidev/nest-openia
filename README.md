@@ -6,11 +6,10 @@
 
 ## Descripción
 
-Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que utiliza la inteligencia artificial de OpenAI para analizar, corregir y calificar textos en español. El sistema detecta errores ortográficos y gramaticales, sugiere correcciones y proporciona retroalimentación personalizada, incluyendo un puntaje de acierto y mensajes motivacionales.
+Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que utiliza la inteligencia artificial de OpenAI.
 
 ## Características
 
-- Corrección ortográfica y gramatical avanzada usando OpenAI GPT-3.5 Turbo.
 - Respuestas estructuradas en formato JSON.
 - Validación robusta de datos de entrada con `class-validator`.
 - Configuración segura de variables de entorno.
@@ -48,7 +47,7 @@ Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que u
 
 ### Endpoint de Corrección Ortográfica
 
-- **POST** `/gpt/orthography`
+- **POST** `/gpt/orthography-check`
 
 #### Body (JSON):
 
@@ -67,6 +66,64 @@ Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que u
   "errors": ["ortografia -> ortografía"],
   "message": "¡Excelente trabajo! 🎉 Solo un pequeño error."
 }
+```
+
+### Endpoint de Pros y Contras (Respuesta Completa)
+
+- **POST** `/gpt/pros-cons-discusser`
+
+Este endpoint recibe una pregunta y responde con una lista de pros y contras en formato markdown.
+
+#### Body (JSON):
+
+```json
+{
+  "prompt": "¿Cuáles son los pros y contras de usar inteligencia artificial en la educación?"
+}
+```
+
+#### Respuesta de ejemplo:
+
+```markdown
+**Pros:**
+
+- Personalización del aprendizaje
+- Acceso a recursos 24/7
+
+**Contras:**
+
+- Dependencia tecnológica
+- Posibles sesgos en los algoritmos
+```
+
+### Endpoint de Pros y Contras (Streaming)
+
+- **POST** `/gpt/pros-cons-discusser-stream`
+
+Este endpoint permite obtener una respuesta en streaming con los pros y contras de una pregunta, utilizando el modelo de OpenAI. La respuesta se entrega en formato markdown y se transmite en tiempo real.
+
+#### Body (JSON):
+
+```json
+{
+  "prompt": "¿Cuáles son los pros y contras de usar inteligencia artificial en la educación?"
+}
+```
+
+#### Respuesta de ejemplo (streaming):
+
+La respuesta se recibe en fragmentos, en formato markdown, por ejemplo:
+
+```markdown
+**Pros:**
+
+- Personalización del aprendizaje
+- Acceso a recursos 24/7
+
+**Contras:**
+
+- Dependencia tecnológica
+- Posibles sesgos en los algoritmos
 ```
 
 ## Estructura del Proyecto
@@ -112,3 +169,7 @@ npm run test:e2e
 ---
 
 Desarrollado con ❤️ por tu equipo de IA y NestJS.
+
+---
+
+Actualizado: Ahora la API no solo corrige textos, sino que también responde preguntas con pros y contras, ofreciendo tres endpoints principales para cubrir diferentes necesidades de análisis y feedback inteligente.
