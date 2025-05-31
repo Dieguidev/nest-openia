@@ -4,8 +4,9 @@ import {
   prosConsDicusserUseCase,
   prosConsDiscusserStreamUseCase,
   translateUseCase,
+  translateUseCaseStream,
 } from './use-cases';
-import { OrthographyDto, ProsConsDiscusserDto } from './dtos';
+import { OrthographyDto, ProsConsDiscusserDto, TranslateDto } from './dtos';
 import { envs } from 'src/config/envs';
 import OpenAI from 'openai';
 
@@ -30,10 +31,19 @@ export class GptService {
     return await prosConsDiscusserStreamUseCase(this.openai, { prompt });
   }
 
-  async translate(translateDto: { prompt: string; lang: string }) {
+  async translate(translateDto: TranslateDto) {
     const { prompt, lang } = translateDto;
 
     return await translateUseCase(this.openai, {
+      prompt,
+      lang,
+    });
+  }
+
+  async translateStream(translateDto: TranslateDto) {
+    const { prompt, lang } = translateDto;
+
+    return await translateUseCaseStream(this.openai, {
       prompt,
       lang,
     });
