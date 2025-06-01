@@ -2,54 +2,58 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-# 🧠 Nest-GPT: API de Corrección Ortográfica y Gramatical con OpenAI
+# 🧠 Nest-GPT: API de Corrección, Pros/Contras y Traducción con OpenAI
 
 ## Descripción
 
-Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que utiliza la inteligencia artificial de OpenAI.
+Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) y TypeScript que utiliza la inteligencia artificial de OpenAI para:
 
-## Características
+- Corregir textos en español (ortografía y gramática)
+- Analizar preguntas y responder con pros y contras (en respuesta completa o streaming)
+- Traducir textos a cualquier idioma (respuesta completa o streaming)
 
-- Respuestas estructuradas en formato JSON.
-- Validación robusta de datos de entrada con `class-validator`.
-- Configuración segura de variables de entorno.
-- Arquitectura modular y escalable basada en buenas prácticas de NestJS.
+El sistema está diseñado para ser seguro, escalable y fácil de integrar en cualquier frontend moderno.
+
+## Características principales
+
+- Corrección ortográfica y gramatical avanzada usando OpenAI GPT-3.5 Turbo
+- Análisis de pros y contras en formato markdown
+- Traducción de textos a cualquier idioma
+- Endpoints con soporte para streaming (respuestas progresivas)
+- Validación robusta de datos de entrada con `class-validator`
+- Configuración segura de variables de entorno con Joi
+- Arquitectura modular y escalable basada en buenas prácticas de NestJS
 
 ## Instalación
 
 1. **Clona el repositorio:**
-
    ```bash
    git clone https://github.com/Dieguidev/nest-openia
    cd nest-gpt
    ```
-
 2. **Instala las dependencias:**
-
    ```bash
    npm install
    ```
-
 3. **Configura las variables de entorno:**
    Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido:
-
    ```env
    PORT=3000
    OPENAI_API_KEY=tu_clave_de_openai
    ```
-
 4. **Inicia el servidor:**
    ```bash
    npm run start:dev
    ```
 
-## Uso de la API
+## Endpoints Disponibles
 
-### Endpoint de Corrección Ortográfica
+### 1. Corrección Ortográfica
 
 - **POST** `/gpt/orthography-check`
+  Corrige errores ortográficos y gramaticales en textos en español, devolviendo sugerencias, puntaje y mensaje motivacional.
 
-#### Body (JSON):
+**Body (JSON):**
 
 ```json
 {
@@ -58,7 +62,7 @@ Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que u
 }
 ```
 
-#### Respuesta de ejemplo:
+**Respuesta de ejemplo:**
 
 ```json
 {
@@ -68,13 +72,12 @@ Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) que u
 }
 ```
 
-### Endpoint de Pros y Contras (Respuesta Completa)
+### 2. Pros y Contras
 
 - **POST** `/gpt/pros-cons-discusser`
+  Recibe una pregunta y responde con una lista de pros y contras en formato markdown.
 
-Este endpoint recibe una pregunta y responde con una lista de pros y contras en formato markdown.
-
-#### Body (JSON):
+**Body (JSON):**
 
 ```json
 {
@@ -82,7 +85,7 @@ Este endpoint recibe una pregunta y responde con una lista de pros y contras en 
 }
 ```
 
-#### Respuesta de ejemplo:
+**Respuesta de ejemplo:**
 
 ```markdown
 **Pros:**
@@ -96,13 +99,12 @@ Este endpoint recibe una pregunta y responde con una lista de pros y contras en 
 - Posibles sesgos en los algoritmos
 ```
 
-### Endpoint de Pros y Contras (Streaming)
+#### Pros y Contras en Streaming
 
 - **POST** `/gpt/pros-cons-discusser-stream`
+  Recibe una pregunta y responde en streaming con los pros y contras en formato markdown, permitiendo mostrar la respuesta en tiempo real.
 
-Este endpoint permite obtener una respuesta en streaming con los pros y contras de una pregunta, utilizando el modelo de OpenAI. La respuesta se entrega en formato markdown y se transmite en tiempo real.
-
-#### Body (JSON):
+**Body (JSON):**
 
 ```json
 {
@@ -110,20 +112,40 @@ Este endpoint permite obtener una respuesta en streaming con los pros y contras 
 }
 ```
 
-#### Respuesta de ejemplo (streaming):
+### 3. Traducción
 
-La respuesta se recibe en fragmentos, en formato markdown, por ejemplo:
+- **POST** `/gpt/translate`
+  Traduce un texto al idioma especificado.
 
-```markdown
-**Pros:**
+**Body (JSON):**
 
-- Personalización del aprendizaje
-- Acceso a recursos 24/7
+```json
+{
+  "prompt": "Texto a traducir",
+  "lang": "en"
+}
+```
 
-**Contras:**
+**Respuesta de ejemplo:**
 
-- Dependencia tecnológica
-- Posibles sesgos en los algoritmos
+```json
+{
+  "message": "Translated text here."
+}
+```
+
+#### Traducción en Streaming
+
+- **POST** `/gpt/translate-stream`
+  Traduce un texto al idioma especificado y entrega la respuesta en tiempo real (streaming).
+
+**Body (JSON):**
+
+```json
+{
+  "prompt": "Texto a traducir",
+  "lang": "en"
+}
 ```
 
 ## Estructura del Proyecto
@@ -140,8 +162,14 @@ src/
     gpt.service.ts
     dtos/
       orthography.dto.ts
+      prosconsDiscusser.dto.ts
+      translate.dto.ts
     use-cases/
       orthography.use-case.ts
+      prosConsDicusser.use-case.ts
+      pros-cons-discusser-stream.use-case.ts
+      translate.use-case.ts
+      translate-stream.use-case.ts
 ```
 
 ## Pruebas
@@ -154,9 +182,9 @@ npm run test:e2e
 
 ## Buenas Prácticas y Seguridad
 
-- Validación estricta de variables de entorno con Joi.
-- Uso de `ValidationPipe` global para sanitizar y validar datos de entrada.
-- Manejo seguro de la clave de OpenAI mediante variables de entorno.
+- Validación estricta de variables de entorno con Joi
+- Uso de `ValidationPipe` global para sanitizar y validar datos de entrada
+- Manejo seguro de la clave de OpenAI mediante variables de entorno
 
 ## Contribución
 
@@ -168,8 +196,4 @@ npm run test:e2e
 
 ---
 
-Desarrollado con ❤️ por tu equipo de IA y NestJS.
-
----
-
-Actualizado: Ahora la API no solo corrige textos, sino que también responde preguntas con pros y contras, ofreciendo tres endpoints principales para cubrir diferentes necesidades de análisis y feedback inteligente.
+Desarrollado con ❤️ por tu equipo de Dieguidev.
