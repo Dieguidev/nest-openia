@@ -2,7 +2,7 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-# 🧠 Nest-GPT: API de Corrección, Pros/Contras y Traducción con OpenAI
+# 🧠 Nest-GPT: API de Corrección, Pros/Contras, Traducción y Audio con OpenAI
 
 ## Descripción
 
@@ -11,6 +11,7 @@ Nest-GPT es una API RESTful desarrollada con [NestJS](https://nestjs.com/) y Typ
 - Corregir textos en español (ortografía y gramática)
 - Analizar preguntas y responder con pros y contras (en respuesta completa o streaming)
 - Traducir textos a cualquier idioma (respuesta completa o streaming)
+- Convertir texto a audio con diferentes voces (síntesis de voz)
 
 El sistema está diseñado para ser seguro, escalable y fácil de integrar en cualquier frontend moderno.
 
@@ -19,7 +20,9 @@ El sistema está diseñado para ser seguro, escalable y fácil de integrar en cu
 - Corrección ortográfica y gramatical avanzada usando OpenAI GPT-3.5 Turbo
 - Análisis de pros y contras en formato markdown
 - Traducción de textos a cualquier idioma
+- Síntesis de voz con múltiples opciones de voces usando OpenAI TTS
 - Endpoints con soporte para streaming (respuestas progresivas)
+- Sistema de almacenamiento y recuperación de archivos de audio
 - Validación robusta de datos de entrada con `class-validator`
 - Configuración segura de variables de entorno con Joi
 - Arquitectura modular y escalable basada en buenas prácticas de NestJS
@@ -148,6 +151,29 @@ El sistema está diseñado para ser seguro, escalable y fácil de integrar en cu
 }
 ```
 
+### 4. Conversión de Texto a Audio
+
+- **POST** `/gpt/text-to-audio`
+  Convierte un texto en un archivo de audio MP3 usando diferentes voces disponibles.
+
+**Body (JSON):**
+
+```json
+{
+  "prompt": "Texto para convertir a audio",
+  "voice": "nova" // Opcional (Valores disponibles: nova, alloy, ash, ballad, coral, echo, fable, onyx, sage, shimmer, verse)
+}
+```
+
+**Respuesta:**
+El endpoint devuelve directamente el archivo de audio MP3 generado, con el header `Content-Type: audio/mp3`.
+
+- **GET** `/gpt/text-to-audio/:fileId`
+  Recupera un archivo de audio previamente generado por su ID.
+
+**Respuesta:**
+El endpoint devuelve el archivo de audio MP3 solicitado, con el header `Content-Type: audio/mp3`.
+
 ## Estructura del Proyecto
 
 ```
@@ -164,12 +190,16 @@ src/
       orthography.dto.ts
       prosconsDiscusser.dto.ts
       translate.dto.ts
+      text-to-audio.dto.ts
     use-cases/
       orthography.use-case.ts
       prosConsDicusser.use-case.ts
       pros-cons-discusser-stream.use-case.ts
       translate.use-case.ts
       translate-stream.use-case.ts
+      text-to-audio.use-case.ts
+generated/
+  audios/             # Almacenamiento de archivos de audio generados
 ```
 
 ## Pruebas
